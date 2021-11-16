@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes App</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        #quote {
+            font-size: 25px;
+            color: #f00;
+            text-align: center;
+            font-family: 'Noto Serif', serif;
+            /* background-color: blueviolet; */
+        }
+
+        #author {
+            font-size: 30px;
+            color: #00f;
+            text-align: center;
+            font-family: 'Noto Serif', serif;
+            /* background-color: blueviolet; */
+        }
+
+        #newQ {
+            height: 40px;
+            width: 150px;
+            align-items: center;
+            background: linear-gradient(yellow, pink, red);
+            margin-top: 5px;
+            border-radius: 15px;
+        }
+
+        #newQ:hover {
+            background-color: yellowgreen;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: #0A212E;
+            margin: 0px;
+            overflow: hidden;
+            animation: color-loop 18s infinite;
+        }
+
+        .waves {
+            position: relative;
+            top: 50%;
+            background: rgba(255, 255, 255, .3);
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            margin-left: -12px;
+            margin-top: -12px;
+            border-radius: 50%;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .wave() {
+            position: absolute;
+            background: white;
+            margin-left: -12px;
+            margin-top: -12px;
+            width: 50px;
+            height: 50px;
+            content: "";
+            display: block;
+            border-radius: 50%;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .waves:before {
+            .wave();
+            animation: wave-animate 3s infinite ease-out;
+        }
+
+        .waves:after {
+            .wave();
+            opacity: 0;
+            animation: wave-animate 3s 1.5s infinite ease-out;
+        }
+
+        @keyframes wave-animate {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+                transform-origin: center;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+                transform-origin: center;
+            }
+        }
+
+        @keyframes color-loop {
+            0% {
+                background: #2CAB5B;
+            }
+
+            25% {
+                background: #FABC03;
+            }
+
+            50% {
+                background: #ED4B40;
+            }
+
+            75% {
+                background: #4286F3;
+            }
+
+            100% {
+                background: #2CAB5B;
+            }
+        }
+
+        .fullcard {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            /* this adds the "card" effect */
+            padding: 16px;
+            text-align: center;
+            background-color: #f1f1f1;
+            margin-top: 25px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            font-family: 'Noto Serif', serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-3"></div>
+
+            <div class="col-sm-7">
+                <h2>Good Quotes Are Best Friends...</h2>
+                <div class="fullcard">
+                    <div id="quote"></div>
+                    <br>
+                    <div id="author"></div>
+                    <button id="newQ">Next Quote</button>
+                </div>
+            </div>
+            <div class="col-sm-2"></div>
+
+        </div>
+    </div>
+    <script>
+
+        const quotes = document.getElementById("quote");
+        const author = document.getElementById("author");
+        const newQ = document.getElementById("newQ");
+
+        let realData = "";
+        let quoteData = "";
+        const getNewQuotes = () => {
+            let rnum = Math.floor(Math.random() * 1500);
+            quoteData = realData[rnum];
+            quotes.innerHTML = `${quoteData.text}`;
+
+            quoteData.author == null ? ("Unknown") : (author.innerHTML = `--${quoteData.author}`);
+
+        };
+
+
+        const getQuotes = async () => {
+            const api = "https://type.fit/api/quotes";
+
+            try {
+                let data = await fetch(api);
+                realData = await data.json();
+                getNewQuotes();
+                console.log(realData);
+                console.log("Hello")
+            }
+            catch (error) {
+
+            }
+        };
+
+        newQ.addEventListener("click", getNewQuotes);
+        getQuotes();
+
+    </script>
+</body>
+
+</html>
